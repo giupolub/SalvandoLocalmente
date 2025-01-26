@@ -33,10 +33,33 @@ export async function atualizaNota(nota) {
     })
 }
 
+export async function removeNota(nota) {
+    return new Promise((resolve) => {
+        db.transaction((transaction) => {
+            transaction.executeSql("DELETE FROM Notas WHERE id = ?;", [nota.id], () => {
+                resolve("Nota removida com sucesso!")
+            }
+            )
+        })
+    })
+}
+
 export async function buscaNotas() {
     return new Promise((resolve) => {
         db.transaction((transaction) => {
             transaction.executeSql("SELECT * FROM Notas;", [], (transaction, resultado) => {
+                resolve(resultado.rows._array)
+            }
+            )
+        })
+    })
+}
+
+export async function buscaNotasPorCategoria(categoria) {
+    return new Promise((resolve) => {
+        db.transaction((transaction) => {
+            transaction.executeSql("SELECT * FROM Notas WHERE categoria = ?;", 
+                [categoria], (transaction, resultado) => {
                 resolve(resultado.rows._array)
             }
             )
